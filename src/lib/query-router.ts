@@ -7,6 +7,7 @@
 
 import { SEARCH_DETAIL_CHAINS } from "./tool-chain-config.js"
 import { parseDateRange, type DateRange } from "./date-parser.js"
+import { isLikelyConstructionDefectQuery, isLikelyConstructionQuery } from "./construction-profile.js"
 
 export interface RouteResult {
   /** 실행할 도구 이름 */
@@ -139,6 +140,71 @@ const routePatterns: Pattern[] = [
     extract: (query) => ({ query }),
     reason: "조례/자치법규 키워드 → 자치법규 검색",
     priority: 5,
+  },
+
+  // ── 3-1. 건축·건설 실무 질문 ──
+  {
+    name: "construction_domain",
+    patterns: [
+      /건축|건설|공동주택|주택|감리|사용승인|준공|착공|하자|누수|균열|방수|단열|소방|주차장|품질관리|중대재해/,
+    ],
+    tool: "route_construction_question",
+    extract: (query) => {
+      if (!isLikelyConstructionQuery(query)) return { _skip: true }
+      if (/개정|신구대조|변경\s*이력|연혁|최근\s*개정|목차|편장절|3단\s*비교|위임\s*조문|인용\s*조문|영향\s*그래프|파급|비교/.test(query)) {
+        return { _skip: true }
+      }
+      return { query }
+    },
+    reason: "건축·건설 실무 키워드 → 건축 법령 라우터",
+    priority: 6,
+  },
+
+  // ── 3-1-0. 현장 조치 근거/회신 초안 ──
+  {
+    name: "site_action_basis",
+    patterns: [
+      /(?:건축|건설|공동주택|주택|감리|하자|방수|단열|소방|주차장|품질관리|현장).*(?:회신|답변|조치\s*근거|현장\s*조치|근거\s*대|뭐라고\s*하|전달사항|체크리스트|보완계획|대응\s*논리)/,
+      /(?:회신|답변|조치\s*근거|현장\s*조치|근거\s*대|뭐라고\s*하|전달사항|체크리스트|보완계획|대응\s*논리).*(?:건축|건설|공동주택|주택|감리|하자|방수|단열|소방|주차장|품질관리|현장)/,
+    ],
+    tool: "make_site_action_basis",
+    extract: (query) => {
+      if (!isLikelyConstructionQuery(query)) return { _skip: true }
+      return { query }
+    },
+    reason: "건축·건설 현장 조치/회신 키워드 → 현장 조치 근거 패키지",
+    priority: 4.8,
+  },
+
+  // ── 3-1-1. 건축·건설 위임관계/하위법령 추적 ──
+  {
+    name: "construction_delegation",
+    patterns: [
+      /(?:건축|건설|공동주택|주택|감리|하자|방수|단열|소방|주차장|품질관리).*(?:위임|근거|법적\s*근거|하위\s*법령|상위법|시행령|시행규칙|고시|3단)/,
+      /(?:위임|근거|법적\s*근거|하위\s*법령|상위법|시행령|시행규칙|고시|3단).*(?:건축|건설|공동주택|주택|감리|하자|방수|단열|소방|주차장|품질관리)/,
+    ],
+    tool: "trace_construction_delegation",
+    extract: (query) => {
+      if (!isLikelyConstructionQuery(query)) return { _skip: true }
+      return { query }
+    },
+    reason: "건축·건설 위임/근거 키워드 → 법률→시행령→시행규칙→고시 추적",
+    priority: 5,
+  },
+
+  // ── 3-2. 건축 하자판정기준 ──
+  {
+    name: "defect_standard",
+    patterns: [
+      /하자\s*판정|하자\s*기준|하자\s*보수|하자로\s*볼|하자인지|하자담보|(?:누수|균열|결로|방수|마감|타일|배관|설비).{0,12}하자|하자.{0,12}(?:누수|균열|결로|방수|마감|타일|배관|설비)/,
+    ],
+    tool: "search_defect_standard",
+    extract: (query) => {
+      if (!isLikelyConstructionDefectQuery(query)) return { _skip: true }
+      return { query }
+    },
+    reason: "건축 하자/하자판정 키워드 → 하자판정기준 전용 검색",
+    priority: 5.5,
   },
 
   // ── 4. 개정 이력/신구대조 ──

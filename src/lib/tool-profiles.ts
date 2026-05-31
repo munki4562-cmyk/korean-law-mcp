@@ -34,6 +34,10 @@ export const TOOL_ALIASES: Record<string, string[]> = {
   "용어": ["법률용어", "법령용어", "용어 정의", "법적 용어", "법률 사전"],
   "판례": ["대법원", "판결문", "판례검색", "대법원 판례"],
   "해석례": ["법제처 해석", "유권해석", "질의회신"],
+  "건축법령": ["건축", "건설", "공동주택", "하자", "감리", "사용승인", "건축허가", "방수", "단열", "품질관리", "건축 법령", "건설 법령"],
+  "하자판정": ["하자판정기준", "하자인지", "하자로 볼 수", "하자보수", "누수 하자", "균열 하자", "결로 하자", "search_defect_standard"],
+  "건축위임": ["건축 위임", "건축 근거", "법적 근거", "시행령", "시행규칙", "고시 근거", "하위법령", "trace_construction_delegation"],
+  "현장조치": ["현장 조치", "감리 회신", "발주처 회신", "협력업체 전달", "CS 회신", "근거 대야", "조치 근거", "make_site_action_basis"],
   // 도구 의도 별칭
   "인용검증": ["verify_citations", "조문 실존 확인", "환각 검증"],
   "문서검토": ["analyze_document", "chain_document_review", "계약서 검토", "약관 검토"],
@@ -44,6 +48,10 @@ export const TOOL_ALIASES: Record<string, string[]> = {
 /** 도구 카테고리 매핑 (discover_tools용) */
 export const TOOL_CATEGORIES: Record<string, string[]> = {
   "법령검색": ["search_law", "search_all", "advanced_search", "suggest_law_names", "search_ai_law"],
+  "건축법령": ["route_construction_question", "search_construction_law", "search_construction_admin_rule", "search_defect_standard", "trace_construction_delegation", "make_site_action_basis"],
+  "하자판정": ["search_defect_standard", "search_construction_law", "search_construction_admin_rule"],
+  "건축위임": ["trace_construction_delegation", "route_construction_question", "search_construction_law"],
+  "현장조치": ["make_site_action_basis", "search_construction_law", "search_construction_admin_rule", "search_defect_standard"],
   "법령조회": ["get_law_text", "get_article_detail", "get_batch_articles", "get_article_with_precedents"],
   "행정규칙": ["search_admin_rule", "get_admin_rule", "compare_admin_rule_old_new"],
   "자치법규": ["search_ordinance", "get_ordinance"],
@@ -74,4 +82,3 @@ export const TOOL_CATEGORIES: Record<string, string[]> = {
   "문서분석": ["analyze_document"],
   "유틸리티": ["parse_jo_code", "get_law_abbreviations"],
 }
-

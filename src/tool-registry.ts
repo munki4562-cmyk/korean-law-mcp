@@ -14,6 +14,20 @@ import { searchDecisions, SearchDecisionsSchema, getDecisionText, GetDecisionTex
 
 // Tool imports
 import { searchLaw, SearchLawSchema } from "./tools/search.js"
+import {
+  routeConstructionQuestion,
+  RouteConstructionQuestionSchema,
+  searchConstructionLaw,
+  SearchConstructionLawSchema,
+  searchConstructionAdminRule,
+  SearchConstructionAdminRuleSchema,
+  searchDefectStandard,
+  SearchDefectStandardSchema,
+  traceConstructionDelegation,
+  TraceConstructionDelegationSchema,
+  makeSiteActionBasis,
+  MakeSiteActionBasisSchema,
+} from "./tools/construction-law.js"
 import { getLawText, GetLawTextSchema } from "./tools/law-text.js"
 import { parseJoCode, ParseJoCodeSchema, getLawAbbreviations, GetLawAbbreviationsSchema } from "./tools/utils.js"
 import { compareOldNew, CompareOldNewSchema } from "./tools/comparison.js"
@@ -98,6 +112,42 @@ export const allTools: McpTool[] = [
     description: "[통합검색] 법령+행정규칙+자치법규 동시검색. 도메인 불명확 시 사용.",
     schema: SearchAllSchema,
     handler: searchAll
+  },
+  {
+    name: "route_construction_question",
+    description: "[건축라우터] 건축·건설 실무 질문을 인허가/감리/품질/하자/안전/소방/에너지/주차/유지관리 등으로 분류하고 우선 조회 법령·고시·판례 검색어를 제안.",
+    schema: RouteConstructionQuestionSchema,
+    handler: routeConstructionQuestion
+  },
+  {
+    name: "search_construction_law",
+    description: "[건축법령검색] 건축·건설 실무 질문을 건축 전용 프로파일로 좁힌 뒤 건축법/주택법/건설기술진흥법/공동주택관리법 등 우선 후보 법령을 검색.",
+    schema: SearchConstructionLawSchema,
+    handler: searchConstructionLaw
+  },
+  {
+    name: "search_construction_admin_rule",
+    description: "[건축하위자료] 건축·건설 관련 고시·훈령·예규·지침·부령성 기준을 프로파일 후보로 검색. 하자판정기준, 에너지절약설계기준, 감리세부기준 등 실무 하위자료 우선.",
+    schema: SearchConstructionAdminRuleSchema,
+    handler: searchConstructionAdminRule
+  },
+  {
+    name: "search_defect_standard",
+    description: "[하자판정] 공동주택·건축 하자 질문을 누수/균열/결로/마감/설비 유형으로 분류하고 하자판정기준, 관련 법령, 판례 검색어, 현장 확인사항을 묶어 조회.",
+    schema: SearchDefectStandardSchema,
+    handler: searchDefectStandard
+  },
+  {
+    name: "trace_construction_delegation",
+    description: "[건축위임추적] 건축·건설 질문의 법적 근거를 법률→시행령→시행규칙→고시·지침 흐름으로 추적. get_law_system_tree + get_three_tier + 하위자료 검색을 묶어서 실행.",
+    schema: TraceConstructionDelegationSchema,
+    handler: traceConstructionDelegation
+  },
+  {
+    name: "make_site_action_basis",
+    description: "[현장조치근거] 건축·건설 실무 질문을 법령/고시/하자판정/위임관계 근거로 묶고, 감리·발주처·협력업체·CS 회신 초안과 현장 체크리스트를 생성.",
+    schema: MakeSiteActionBasisSchema,
+    handler: makeSiteActionBasis
   },
   {
     name: "advanced_search",
@@ -725,6 +775,10 @@ const V3_EXPOSED = new Set([
   "chain_dispute_prep", "chain_amendment_track", "chain_ordinance_compare",
   "chain_procedure_detail", "chain_document_review",
   "search_law", "get_law_text",
+  "route_construction_question", "search_construction_law", "search_construction_admin_rule",
+  "search_defect_standard",
+  "trace_construction_delegation",
+  "make_site_action_basis",
   "get_annexes",
   "search_decisions", "get_decision_text",
   "discover_tools", "execute_tool",
