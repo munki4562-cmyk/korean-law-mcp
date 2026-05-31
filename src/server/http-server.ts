@@ -109,9 +109,9 @@ export async function startHTTPServer(createServer: () => Server, port: number) 
         health: "/health",
       },
       tools: {
-        exposed: 16,
-        total: 92,
-        description: "V3_EXPOSED 16개 직노출, 나머지 76개는 execute_tool 경유",
+        exposed: 23,
+        total: 99,
+        description: "V3_EXPOSED 23개 직노출, 나머지 76개는 execute_tool 경유",
       },
     })
   })
